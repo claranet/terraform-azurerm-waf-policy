@@ -2,7 +2,6 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
   name                = coalesce(var.custom_name, local.default_name)
   resource_group_name = var.resource_group_name
   location            = var.location
-  location_short = var.location_short
 
   policy_settings {
     enabled                     = var.policy_enabled
@@ -37,7 +36,7 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
       }
     }
   }
-  
+
   dynamic "custom_rules" {
     for_each = var.custom_rules_configuration
     content {
@@ -47,14 +46,11 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
       action    = lookup(custom_rules.value, "action")
 
       dynamic "match_conditions" {
-        for_each = var.match_conditions_configuration
+        for_each = var.match_conditions_configuration[lookup(custom_rules.value, "name")]
         content {
-          dynamic "match_variables" {
-            for_each = var.custom_match_variables
-            content {
+          match_variables {
             variable_name = lookup(match_conditions.value, "variable_name")
-            selector      = lookup(match_conditions.value, "selector")
-            }
+            selector      = lookup(match_conditions.value, "selector", null)
           }
           match_values       = lookup(match_conditions.value, "match_values")
           operator           = lookup(match_conditions.value, "operator")
@@ -68,6 +64,6 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
   #
   # Tags
   #
-  
-  tags = merge(module.tags.asset_custom_tags, var.custom_tags)
+
+  tags = merge(local.default_tags, var.extra_tags)
 }

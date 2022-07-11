@@ -11,6 +11,7 @@ variable "name_prefix" {
 
 variable "custom_name" {
   description = "Custom WAF Policy name, generated if not set"
+  type        = string
   default     = ""
 }
 
@@ -25,7 +26,8 @@ variable "stack" {
 }
 
 variable "location" {
-  type = string
+  description = "Location"
+  type        = string
 }
 
 variable "location_short" {
@@ -34,70 +36,70 @@ variable "location_short" {
 }
 
 variable "resource_group_name" {
-  type = string
+  description = "Resource Group Name"
+  type        = string
 }
 
 variable "custom_rules_configuration" {
-  type    = any
-  default = []
+  description = "Custom rules configuration"
+  type        = list(map(string))
+  default     = []
 }
 
 variable "match_conditions_configuration" {
-  type    = any
-  default = []
-}
-
-variable "custom_match_variables" {
-  type    = any
+  description = "Match conditions configuration"
+  #type = map(list(object({
+  #  variable_name      = string
+  #  selector           = optional(string)
+  #  operator           = string
+  #  match_values       = list(string)
+  #  negation_condition = bool
+  #  transforms         = optional(string)
+  #})))
+  type = map(list(string))
   default = {}
-}
-
-variable "custom_tags" {
-  type    = map(string)
-  default = {}
-}
-
-variable "creation_date" {
-  type = string
-}
-
-variable "countries" {
-  type = string
 }
 
 variable "policy_enabled" {
-  type    = string
-  default = true
+  description = "Enable policy"
+  type        = string
+  default     = true
 }
 
 variable "policy_mode" {
-  type    = string
-  default = "Prevention"
+  description = "Policy Mode"
+  type        = string
+  default     = "Prevention"
 }
 
 variable "policy_file_limit" {
-  type    = string
-  default = "100"
+  description = "Policy file limit"
+  type        = string
+  default     = "100"
 }
 
 variable "policy_request_body_check" {
-  type    = string
-  default = true
+  description = "Policy request body check"
+  type        = string
+  default     = true
 }
 
 variable "policy_max_body_size" {
-  type    = string
-  default = "128"
+  description = "Polixy max body size"
+  type        = string
+  default     = "128"
 }
 
 variable "exclusion_configuration" {
-  type    = any
-  default = []
+  description = "Exclusion configuration"
+  type        = any
+  default     = []
 }
 
 variable "managed_rule_set_configuration" {
-  type    = any
-  default = []
+  description = "Managed rule set configuration"
+  type        = list(map(string))
+  default     = []
 }
 
 variable "rule_group_override_configuration" {
