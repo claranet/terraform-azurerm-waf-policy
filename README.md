@@ -54,18 +54,47 @@ module "waf_policy" {
       priority  = 1
       rule_type = "MatchRule"
       action    = "Block"
-    },
-  ]
 
-  match_conditions_configuration = [
-    {
-      variable_name      = "RemoteAddr"
-      selector           = null
-      operator           = "IPMatch"
-      match_values       = ["XXX.XXX.XXX.XXX/XX"]
-      negation_condition = true
-      transforms         = null
-    },
+      match_conditions_configuration = [
+        {
+          match_variable_configuration = [
+            {
+              variable_name = "RemoteAddr"
+              selector      = null
+            }
+          ]
+
+          match_values = [
+            "X.X.X.X"
+          ]
+
+          operator = "IPMatch"
+          negation_condition = true
+          transforms         = null
+      },
+      {
+          match_variable_configuration = [
+            {
+              variable_name = "RequestUri"
+              selector      = null
+            },
+            {
+              variable_name = "RequestUri"
+              selector      = null
+            }
+          ]
+
+          match_values = [
+            "Azure",
+            "Cloud"
+          ]
+
+          operator = "Contains"
+          negation_condition = true
+          transforms         = null
+      }
+      ]
+    }
   ]
 }
 ```

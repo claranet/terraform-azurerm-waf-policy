@@ -3,12 +3,6 @@ variable "client_name" {
   type        = string
 }
 
-variable "name_prefix" {
-  description = "Optional prefix for resource name"
-  type        = string
-  default     = ""
-}
-
 variable "custom_name" {
   description = "Custom WAF Policy name, generated if not set"
   type        = string
@@ -40,24 +34,9 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "custom_rules_configuration" {
-  description = "Custom rules configuration"
-  type        = list(map(string))
-  default     = []
-}
-
 variable "match_conditions_configuration" {
   description = "Match conditions configuration"
-  #type = map(list(object({
-  #  variable_name      = string
-  #  selector           = optional(string)
-  #  operator           = string
-  #  match_values       = list(string)
-  #  negation_condition = bool
-  #  transforms         = optional(string)
-  #})))
-  type = map(list(string))
-  default = {}
+  type        = any
 }
 
 variable "policy_enabled" {

@@ -40,22 +40,31 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
   dynamic "custom_rules" {
     for_each = var.custom_rules_configuration
     content {
+      # Required
       name      = lookup(custom_rules.value, "name")
       priority  = lookup(custom_rules.value, "priority")
       rule_type = lookup(custom_rules.value, "rule_type")
       action    = lookup(custom_rules.value, "action")
 
       dynamic "match_conditions" {
-        for_each = var.match_conditions_configuration[lookup(custom_rules.value, "name")]
+        for_each = lookup(custom_rules.value, "match_conditions_configuration")
         content {
-          match_variables {
-            variable_name = lookup(match_conditions.value, "variable_name")
-            selector      = lookup(match_conditions.value, "selector", null)
+          # Required
+          dynamic "match_variables" {
+            for_each = lookup(match_conditions.value, "match_variable_configuration")
+            content {
+              # Required
+              variable_name = lookup(match_variables.value, "variable_name")
+
+              # Optional
+              selector = lookup(match_variables.value, "selector", null)
+            }
           }
-          match_values       = lookup(match_conditions.value, "match_values")
-          operator           = lookup(match_conditions.value, "operator")
-          negation_condition = lookup(match_conditions.value, "negation_condition")
-          transforms         = lookup(match_conditions.value, "transforms")
+          match_values = lookup(match_conditions.value, "match_values")
+          operator     = lookup(match_conditions.value, "operator")
+          # Optional
+          negation_condition = lookup(match_conditions.value, "negation_condition", null)
+          transforms         = lookup(match_conditions.value, "transforms", null)
         }
       }
     }
