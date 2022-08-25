@@ -34,8 +34,8 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "match_conditions_configuration" {
-  description = "Match conditions configuration"
+variable "custom_rules_configuration" {
+  description = "Custom rules configuration"
   type        = any
 }
 
