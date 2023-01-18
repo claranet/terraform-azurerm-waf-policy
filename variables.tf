@@ -3,12 +3,6 @@ variable "client_name" {
   type        = string
 }
 
-variable "custom_name" {
-  description = "Custom WAF Policy name, generated if not set"
-  type        = string
-  default     = ""
-}
-
 variable "environment" {
   description = "Project environment"
   type        = string
@@ -37,6 +31,7 @@ variable "resource_group_name" {
 variable "custom_rules_configuration" {
   description = "Custom rules configuration"
   type        = any
+  default     = {}
 }
 
 variable "policy_enabled" {
@@ -64,7 +59,7 @@ variable "policy_request_body_check" {
 }
 
 variable "policy_max_body_size" {
-  description = "Polixy max body size"
+  description = "Policy max body size"
   type        = string
   default     = "128"
 }
@@ -78,7 +73,12 @@ variable "exclusion_configuration" {
 variable "managed_rule_set_configuration" {
   description = "Managed rule set configuration"
   type        = list(map(string))
-  default     = []
+  default = [
+    {
+      type    = "OWASP"
+      version = "3.2"
+    }
+  ]
 }
 
 variable "rule_group_override_configuration" {

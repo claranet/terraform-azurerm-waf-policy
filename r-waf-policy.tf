@@ -1,7 +1,7 @@
 resource "azurerm_web_application_firewall_policy" "waf_policy" {
-  name                = coalesce(var.custom_name, local.default_name)
-  resource_group_name = var.resource_group_name
   location            = var.location
+  name                = local.policy_name
+  resource_group_name = var.resource_group_name
 
   policy_settings {
     enabled                     = var.policy_enabled
