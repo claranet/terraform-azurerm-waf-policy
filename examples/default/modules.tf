@@ -16,7 +16,7 @@ module "rg" {
 }
 
 module "waf_policy" {
-  source  = "claranet/waf_policy/azurerm"
+  source  = "claranet/waf-policy/azurerm"
   version = "x.x.x"
 
   client_name    = var.client_name

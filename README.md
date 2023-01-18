@@ -39,13 +39,13 @@ module "rg" {
 }
 
 module "waf_policy" {
-  source  = "claranet/waf_policy/azurerm"
+  source  = "claranet/waf-policy/azurerm"
   version = "x.x.x"
 
   client_name    = var.client_name
   environment    = var.environment
-  location       = module.azure-region.location
-  location_short = module.azure-region.location_short
+  location       = module.azure_region.location
+  location_short = module.azure_region.location_short
   stack          = var.stack
 
   resource_group_name = module.rg.resource_group_name
