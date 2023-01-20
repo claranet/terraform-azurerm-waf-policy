@@ -48,8 +48,8 @@ variable "policy_mode" {
 
 variable "policy_file_limit" {
   description = "Policy file limit"
-  type        = string
-  default     = "100"
+  type        = number
+  default     = 100
 }
 
 variable "policy_request_body_check" {
@@ -60,8 +60,8 @@ variable "policy_request_body_check" {
 
 variable "policy_max_body_size" {
   description = "Policy max body size"
-  type        = string
-  default     = "128"
+  type        = number
+  default     = 128
 }
 
 variable "exclusion_configuration" {

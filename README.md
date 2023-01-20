@@ -1,6 +1,8 @@
 # Azure WAF Policies
+[![Changelog](https://img.shields.io/badge/changelog-release-green.svg)](CHANGELOG.md) [![Notice](https://img.shields.io/badge/notice-copyright-yellow.svg)](NOTICE) [![Apache V2 License](https://img.shields.io/badge/license-Apache%20V2-orange.svg)](LICENSE) [![TF Registry](https://img.shields.io/badge/terraform-registry-blue.svg)](https://registry.terraform.io/modules/claranet/app-service/azurerm/latest)
 
-```
+This terraform module creates an [Azure WAF policy](https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/policy-overview) with OWASP 3.2 enabled
+
 <!-- BEGIN_TF_DOCS -->
 ## Global versioning rule for Claranet Azure modules
 
@@ -118,7 +120,7 @@ module "waf_policy" {
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 3.22 |
+| azurerm | ~> 3.22, < 3.36 |
 
 ## Modules
 
@@ -144,8 +146,8 @@ No modules.
 | location\_short | Short string for Azure location. | `string` | n/a | yes |
 | managed\_rule\_set\_configuration | Managed rule set configuration | `list(map(string))` | <pre>[<br>  {<br>    "type": "OWASP",<br>    "version": "3.2"<br>  }<br>]</pre> | no |
 | policy\_enabled | Enable policy | `string` | `true` | no |
-| policy\_file\_limit | Policy file limit | `string` | `"100"` | no |
-| policy\_max\_body\_size | Policy max body size | `string` | `"128"` | no |
+| policy\_file\_limit | Policy file limit | `number` | `100` | no |
+| policy\_max\_body\_size | Policy max body size | `number` | `128` | no |
 | policy\_mode | Policy Mode | `string` | `"Prevention"` | no |
 | policy\_request\_body\_check | Policy request body check | `string` | `true` | no |
 | resource\_group\_name | Resource Group Name | `string` | n/a | yes |
