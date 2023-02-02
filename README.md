@@ -1,5 +1,5 @@
 # Azure WAF Policies
-[![Changelog](https://img.shields.io/badge/changelog-release-green.svg)](CHANGELOG.md) [![Notice](https://img.shields.io/badge/notice-copyright-yellow.svg)](NOTICE) [![Apache V2 License](https://img.shields.io/badge/license-Apache%20V2-orange.svg)](LICENSE) [![TF Registry](https://img.shields.io/badge/terraform-registry-blue.svg)](https://registry.terraform.io/modules/claranet/app-service/azurerm/latest)
+[![Changelog](https://img.shields.io/badge/changelog-release-green.svg)](CHANGELOG.md) [![Notice](https://img.shields.io/badge/notice-copyright-yellow.svg)](NOTICE) [![Apache V2 License](https://img.shields.io/badge/license-Apache%20V2-orange.svg)](LICENSE) [![TF Registry](https://img.shields.io/badge/terraform-registry-blue.svg)](https://registry.terraform.io/modules/claranet/waf-policy/azurerm/latest)
 
 This terraform module creates an [Azure WAF policy](https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/policy-overview) with OWASP 3.2 enabled
 
@@ -120,6 +120,7 @@ module "waf_policy" {
 
 | Name | Version |
 |------|---------|
+| azurecaf | ~> 1.2, >= 1.2.22 |
 | azurerm | ~> 3.22, < 3.36 |
 
 ## Modules
@@ -131,6 +132,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_web_application_firewall_policy.waf_policy](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/web_application_firewall_policy) | resource |
+| [azurecaf_name.wafp](https://registry.terraform.io/providers/aztfmod/azurecaf/latest/docs/data-sources/name) | data source |
 
 ## Inputs
 
@@ -145,6 +147,8 @@ No modules.
 | location | Location | `string` | n/a | yes |
 | location\_short | Short string for Azure location. | `string` | n/a | yes |
 | managed\_rule\_set\_configuration | Managed rule set configuration | `list(map(string))` | <pre>[<br>  {<br>    "type": "OWASP",<br>    "version": "3.2"<br>  }<br>]</pre> | no |
+| name\_prefix | Optional prefix for the generated name | `string` | `""` | no |
+| name\_suffix | Optional suffix for the generated name | `string` | `""` | no |
 | policy\_enabled | Enable policy | `string` | `true` | no |
 | policy\_file\_limit | Policy file limit | `number` | `100` | no |
 | policy\_max\_body\_size | Policy max body size | `number` | `128` | no |
@@ -153,12 +157,15 @@ No modules.
 | resource\_group\_name | Resource Group Name | `string` | n/a | yes |
 | rule\_group\_override\_configuration | The rule group where specific rules should be disabled. Accepted values can be found here: https://www.terraform.io/docs/providers/azurerm/r/application_gateway.html#rule_group_name | <pre>list(object({<br>    rule_group_name = string<br>    disabled_rules  = list(string)<br>  }))</pre> | `[]` | no |
 | stack | Project stack name | `string` | n/a | yes |
+| use\_caf\_naming | Use the Azure CAF naming provider to generate default resource name. `waf_policy_custom_name` override this if set. Legacy default name is used if this is set to `false`. | `bool` | `true` | no |
 | waf\_policy\_custom\_name | Custom WAF Policy name, generated if not set | `string` | `""` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| http\_listener\_ids | A list of HTTP Listener IDs from an azurerm\_application\_gateway. |
+| path\_based\_rule\_ids | A list of URL Path Map Path Rule IDs from an azurerm\_application\_gateway. |
 | waf\_policy\_id | Waf Policy ID |
 <!-- END_TF_DOCS -->
 ## Related documentation

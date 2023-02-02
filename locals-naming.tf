@@ -1,6 +1,7 @@
 locals {
   # Naming locals/constants
-  default_policy_name = "${var.stack}-${var.client_name}-${var.location_short}-${var.environment}-waf-policy"
+  name_prefix = lower(var.name_prefix)
+  name_suffix = lower(var.name_suffix)
 
-  policy_name = coalesce(var.waf_policy_custom_name, local.default_policy_name)
+  policy_name = coalesce(var.waf_policy_custom_name, lower(data.azurecaf_name.wafp.result))
 }
