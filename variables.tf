@@ -43,10 +43,16 @@ variable "policy_mode" {
 variable "policy_file_limit" {
   description = "Policy regarding the size limit of uploaded files. Value is in MB. Accepted values are in the range `1` to `4000`. Defaults to `100`."
   type        = number
+  nullable    = false
   default     = 100
+
+  validation {
+    condition     = var.policy_file_limit >= 1 && var.policy_file_limit <= 4000
+    error_message = "The policy_file_limit parameter can only have a value comprised between 1 and 4000"
+  }
 }
 
-variable "policy_request_body_check" {
+variable "policy_request_body_check_enabled" {
   description = "Describes if the Request Body Inspection is enabled. Defaults to `true`."
   type        = string
   default     = true
@@ -55,7 +61,13 @@ variable "policy_request_body_check" {
 variable "policy_max_body_size" {
   description = "Policy regarding the maximum request body size. Value is in KB. Accepted values are in the range `8` to `2000`. Defaults to `128`."
   type        = number
-  default     = 128
+
+  validation {
+    condition     = var.policy_max_body_size >= 8 && var.policy_max_body_size <= 2000
+    error_message = "The policy_max_body_size parameter can only have a value comprised between 8(Kb) and 2000(Kb)"
+  }
+
+  default = 128
 }
 
 variable "custom_rules_configuration" {

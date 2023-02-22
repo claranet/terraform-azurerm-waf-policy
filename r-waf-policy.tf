@@ -7,21 +7,19 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
     enabled                     = var.policy_enabled
     mode                        = var.policy_mode
     file_upload_limit_in_mb     = var.policy_file_limit
-    request_body_check          = var.policy_request_body_check
+    request_body_check          = var.policy_request_body_check_enabled
     max_request_body_size_in_kb = var.policy_max_body_size
   }
 
   managed_rules {
     dynamic "managed_rule_set" {
       for_each = var.managed_rule_set_configuration
-      iterator = managed_rule_set
 
       content {
         type    = managed_rule_set.value.type
         version = managed_rule_set.value.version
         dynamic "rule_group_override" {
           for_each = managed_rule_set.value.rule_group_override_configuration != null ? managed_rule_set.value.rule_group_override_configuration : []
-          iterator = rule_group_override
 
           content {
             rule_group_name = rule_group_override.value.rule_group_name
@@ -33,7 +31,6 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
 
     dynamic "exclusion" {
       for_each = var.exclusion_configuration
-      iterator = exclusion
 
       content {
         match_variable          = exclusion.value.match_variable
@@ -48,7 +45,6 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
             version = rule_set.value.version
             dynamic "rule_group" {
               for_each = rule_set.value.rule_group_configuration
-              iterator = rule_group
 
               content {
                 rule_group_name = rule_group.value.rule_group_name
@@ -63,7 +59,6 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
 
   dynamic "custom_rules" {
     for_each = var.custom_rules_configuration
-    iterator = custom_rules
 
     content {
       name      = custom_rules.value.name
@@ -72,12 +67,10 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
       action    = custom_rules.value.action
       dynamic "match_conditions" {
         for_each = custom_rules.value.match_conditions_configuration
-        iterator = match_conditions
 
         content {
           dynamic "match_variables" {
             for_each = match_conditions.value.match_variable_configuration
-            iterator = match_variables
 
             content {
               variable_name = match_variables.value.variable_name

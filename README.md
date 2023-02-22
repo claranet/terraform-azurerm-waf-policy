@@ -160,7 +160,7 @@ No modules.
 | policy\_file\_limit | Policy regarding the size limit of uploaded files. Value is in MB. Accepted values are in the range `1` to `4000`. Defaults to `100`. | `number` | `100` | no |
 | policy\_max\_body\_size | Policy regarding the maximum request body size. Value is in KB. Accepted values are in the range `8` to `2000`. Defaults to `128`. | `number` | `128` | no |
 | policy\_mode | Describes if it is in detection mode or prevention mode at the policy level. Valid values are `Detection` and `Prevention`. Defaults to `Prevention`. | `string` | `"Prevention"` | no |
-| policy\_request\_body\_check | Describes if the Request Body Inspection is enabled. Defaults to `true`. | `string` | `true` | no |
+| policy\_request\_body\_check\_enabled | Describes if the Request Body Inspection is enabled. Defaults to `true`. | `string` | `true` | no |
 | resource\_group\_name | Resource Group Name. | `string` | n/a | yes |
 | stack | Project stack name. | `string` | n/a | yes |
 | use\_caf\_naming | Use the Azure CAF naming provider to generate default resource name. `waf_policy_custom_name` override this if set. Legacy default name is used if this is set to `false`. | `bool` | `true` | no |
