@@ -7,21 +7,23 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
     enabled                     = var.policy_enabled
     mode                        = var.policy_mode
     file_upload_limit_in_mb     = var.policy_file_limit
-    request_body_check          = var.policy_request_body_check
+    request_body_check          = var.policy_request_body_check_enabled
     max_request_body_size_in_kb = var.policy_max_body_size
   }
 
   managed_rules {
     dynamic "managed_rule_set" {
       for_each = var.managed_rule_set_configuration
+
       content {
-        type    = lookup(managed_rule_set.value, "type")
-        version = lookup(managed_rule_set.value, "version")
+        type    = managed_rule_set.value.type
+        version = managed_rule_set.value.version
         dynamic "rule_group_override" {
-          for_each = var.rule_group_override_configuration
+          for_each = managed_rule_set.value.rule_group_override_configuration != null ? managed_rule_set.value.rule_group_override_configuration : []
+
           content {
-            rule_group_name = lookup(rule_group_override.value, "rule_group_name", null)
-            disabled_rules  = lookup(rule_group_override.value, "disabled_rules", null)
+            rule_group_name = rule_group_override.value.rule_group_name
+            disabled_rules  = rule_group_override.value.disabled_rules
           }
         }
       }
@@ -29,42 +31,56 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
 
     dynamic "exclusion" {
       for_each = var.exclusion_configuration
+
       content {
-        match_variable          = lookup(exclusion.value, "match_variable")
-        selector                = lookup(exclusion.value, "selector")
-        selector_match_operator = lookup(exclusion.value, "selector_match_operator")
+        match_variable          = exclusion.value.match_variable
+        selector                = exclusion.value.selector
+        selector_match_operator = exclusion.value.selector_match_operator
+        dynamic "excluded_rule_set" {
+          for_each = exclusion.value.excluded_rule_set_configuration
+          iterator = rule_set
+
+          content {
+            type    = rule_set.value.type
+            version = rule_set.value.version
+            dynamic "rule_group" {
+              for_each = rule_set.value.rule_group_configuration
+
+              content {
+                rule_group_name = rule_group.value.rule_group_name
+                excluded_rules  = rule_group.value.excluded_rules
+              }
+            }
+          }
+        }
       }
     }
   }
 
   dynamic "custom_rules" {
     for_each = var.custom_rules_configuration
+
     content {
-      # Required
-      name      = lookup(custom_rules.value, "name")
-      priority  = lookup(custom_rules.value, "priority")
-      rule_type = lookup(custom_rules.value, "rule_type")
-      action    = lookup(custom_rules.value, "action")
-
+      name      = custom_rules.value.name
+      priority  = custom_rules.value.priority
+      rule_type = custom_rules.value.rule_type
+      action    = custom_rules.value.action
       dynamic "match_conditions" {
-        for_each = lookup(custom_rules.value, "match_conditions_configuration")
-        content {
-          # Required
-          dynamic "match_variables" {
-            for_each = lookup(match_conditions.value, "match_variable_configuration")
-            content {
-              # Required
-              variable_name = lookup(match_variables.value, "variable_name")
+        for_each = custom_rules.value.match_conditions_configuration
 
-              # Optional
-              selector = lookup(match_variables.value, "selector", null)
+        content {
+          dynamic "match_variables" {
+            for_each = match_conditions.value.match_variable_configuration
+
+            content {
+              variable_name = match_variables.value.variable_name
+              selector      = match_variables.value.selector
             }
           }
-          match_values = lookup(match_conditions.value, "match_values")
-          operator     = lookup(match_conditions.value, "operator")
-          # Optional
-          negation_condition = lookup(match_conditions.value, "negation_condition", null)
-          transforms         = lookup(match_conditions.value, "transforms", null)
+          match_values       = match_conditions.value.match_values
+          operator           = match_conditions.value.operator
+          negation_condition = match_conditions.value.negation_condition
+          transforms         = match_conditions.value.transforms
         }
       }
     }
