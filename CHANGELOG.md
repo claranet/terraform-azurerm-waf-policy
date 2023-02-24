@@ -1,4 +1,4 @@
-# Unreleased
+# v7.0.0 - 2023-02-24
 
 Breaking
   * AZ-1007: Update to Terraform `v1.3`
