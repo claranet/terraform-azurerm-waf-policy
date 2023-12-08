@@ -145,7 +145,11 @@ variable "managed_rule_set_configuration" {
     version = optional(string, "3.2")
     rule_group_override_configuration = optional(list(object({
       rule_group_name = optional(string, null)
-      disabled_rules  = optional(list(string), null)
+      rule = optional(list(object({
+        id      = string
+        enabled = optional(bool)
+        action  = optional(string)
+      })), [])
     })))
 
   }))
