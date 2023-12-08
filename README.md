@@ -128,7 +128,7 @@ module "waf_policy" {
 | Name | Version |
 |------|---------|
 | azurecaf | ~> 1.2, >= 1.2.22 |
-| azurerm | ~> 3.31 |
+| azurerm | ~> 3.80 |
 
 ## Modules
 
@@ -153,7 +153,7 @@ No modules.
 | extra\_tags | Extra tags to add. | `map(string)` | `{}` | no |
 | location | Azure location. | `string` | n/a | yes |
 | location\_short | Short string for Azure location. | `string` | n/a | yes |
-| managed\_rule\_set\_configuration | Managed rule set configuration. | <pre>list(object({<br>    type    = optional(string, "OWASP")<br>    version = optional(string, "3.2")<br>    rule_group_override_configuration = optional(list(object({<br>      rule_group_name = optional(string, null)<br>      disabled_rules  = optional(list(string), null)<br>    })))<br><br>  }))</pre> | `[]` | no |
+| managed\_rule\_set\_configuration | Managed rule set configuration. | <pre>list(object({<br>    type    = optional(string, "OWASP")<br>    version = optional(string, "3.2")<br>    rule_group_override_configuration = optional(list(object({<br>      rule_group_name = optional(string, null)<br>      rule = optional(list(object({<br>        id      = string<br>        enabled = optional(bool)<br>        action  = optional(string)<br>      })), [])<br>    })))<br><br>  }))</pre> | `[]` | no |
 | name\_prefix | Optional prefix for the generated name. | `string` | `""` | no |
 | name\_suffix | Optional suffix for the generated name. | `string` | `""` | no |
 | policy\_enabled | Describes if the policy is in `enabled` state or `disabled` state. Defaults to `true`. | `string` | `true` | no |

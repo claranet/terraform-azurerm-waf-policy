@@ -23,8 +23,17 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
 
           content {
             rule_group_name = rule_group_override.value.rule_group_name
-            disabled_rules  = rule_group_override.value.disabled_rules
+            dynamic "rule" {
+              for_each = try(rule_group_override.value.rule, [])
+
+              content {
+                id      = rule.value.id
+                enabled = rule.value.enabled
+                action  = rule.value.action
+              }
+            }
           }
+
         }
       }
     }
