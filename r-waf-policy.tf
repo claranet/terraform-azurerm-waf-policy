@@ -46,14 +46,14 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
         selector                = exclusion.value.selector
         selector_match_operator = exclusion.value.selector_match_operator
         dynamic "excluded_rule_set" {
-          for_each = exclusion.value.excluded_rule_set_configuration
+          for_each = exclusion.value.excluded_rule_set
           iterator = rule_set
 
           content {
             type    = rule_set.value.type
             version = rule_set.value.version
             dynamic "rule_group" {
-              for_each = rule_set.value.rule_group_configuration
+              for_each = rule_set.value.rule_group
 
               content {
                 rule_group_name = rule_group.value.rule_group_name

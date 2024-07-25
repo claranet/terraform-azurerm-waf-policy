@@ -111,15 +111,15 @@ variable "exclusion_configuration" {
   description = <<EOD
 Exclusion rules configuration object with following attributes:
 ```
-- match_variable:          The name of the Match Variable. Accepted values can be found here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/web_application_firewall_policy#match_variable
+- match_variable:          The name of the Match Variable. Accepted values can be found [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/web_application_firewall_policy#match_variable).
 - selector:                Describes field of the matchVariable collection.
 - selector_match_operator: Describes operator to be matched. Possible values: `Contains`, `EndsWith`, `Equals`, `EqualsAny`, `StartsWith`.
 - excluded_rule_set:       One or more `excluded_rule_set` block defined below.
-- type:                    The rule set type. The only possible value is `OWASP` . Defaults to `OWASP`.
-- version:                 The rule set version. The only possible value is `3.2` . Defaults to `3.2`.
-- rule_group:              One or more `rule_group` block defined below.
-- rule_group_name:         The name of rule group for exclusion. Accepted values can be found here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/web_application_firewall_policy#rule_group_name
-- excluded_rules:          One or more Rule IDs for exclusion.
+  - type:                  The rule set type. The only possible value is `OWASP`. Defaults to `OWASP`.
+  - version:               The rule set version. The only possible value is `3.2`. Defaults to `3.2`.
+  - rule_group:            One or more `rule_group` block defined below.
+    - rule_group_name:     The name of rule group for exclusion. Accepted values can be found [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/web_application_firewall_policy#rule_group_name).
+    - excluded_rules:      One or more Rule IDs for exclusion.
 ```
 EOD
   type = list(object({
@@ -130,10 +130,10 @@ EOD
       type    = optional(string, "OWASP")
       version = optional(string, "3.2")
       rule_group = optional(list(object({
-        rule_group_name = optional(string)
-        excluded_rules  = optional(string)
-      })))
-    })))
+        rule_group_name = string
+        excluded_rules  = optional(list(string), [])
+      })), [])
+    })), [])
   }))
   default = []
 }
