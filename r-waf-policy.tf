@@ -1,6 +1,6 @@
-resource "azurerm_web_application_firewall_policy" "waf_policy" {
+resource "azurerm_web_application_firewall_policy" "main" {
   location            = var.location
-  name                = local.policy_name
+  name                = local.name
   resource_group_name = var.resource_group_name
 
   policy_settings {
@@ -95,9 +95,10 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
     }
   }
 
-  #
-  # Tags
-  #
-
   tags = merge(local.default_tags, var.extra_tags)
+}
+
+moved {
+  from = azurerm_web_application_firewall_policy.waf_policy
+  to   = azurerm_web_application_firewall_policy.main
 }

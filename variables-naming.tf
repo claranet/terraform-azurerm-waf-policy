@@ -11,15 +11,9 @@ variable "name_suffix" {
   default     = ""
 }
 
-variable "use_caf_naming" {
-  description = "Use the Azure CAF naming provider to generate default resource name. `waf_policy_custom_name` override this if set. Legacy default name is used if this is set to `false`."
-  type        = bool
-  default     = true
-}
-
 # Custom naming override
-variable "waf_policy_custom_name" {
-  description = "Custom WAF Policy name, generated if not set."
+variable "custom_name" {
+  description = "WAF Policy custom name."
   type        = string
-  default     = ""
+  default     = null
 }
