@@ -39,29 +39,96 @@ variable "policy_max_body_size" {
   }
 }
 
+variable "policy_request_body_enforcement" {
+  description = "Whether the firewall should block a request with body size greater then max_request_body_size_in_kb. Defaults to `true`."
+  type        = bool
+  default     = true
+}
+
+variable "policy_request_body_inspect_limit" {
+  description = "Specifies the maximum request body inspection limit in KB for the Web Application Firewall. Accepted values are in the range `8` to `2000`. Defaults to `128`."
+  type        = number
+  default     = 128
+
+  validation {
+    condition     = var.policy_request_body_inspect_limit >= 8 && var.policy_request_body_inspect_limit <= 2000
+    error_message = "The policy_request_body_inspect_limit parameter can only have a value comprised between 8(Kb) and 2000(Kb)."
+  }
+}
+
+variable "policy_js_challenge_cookie_expiration" {
+  description = "Specifies the JavaScript challenge cookie validity lifetime in minutes. The user is challenged after the lifetime expires. Accepted values are in the range `5` to `1440`. Defaults to `30`."
+  type        = number
+  default     = 30
+
+  validation {
+    condition     = var.policy_js_challenge_cookie_expiration >= 5 && var.policy_js_challenge_cookie_expiration <= 1440
+    error_message = "The policy_js_challenge_cookie_expiration parameter can only have a value comprised between 5 and 1440 minutes."
+  }
+}
+
+variable "policy_file_upload_enforcement" {
+  description = "Whether the firewall should block a request with upload size greater then file_upload_limit_in_mb. Defaults to `true`."
+  type        = bool
+  default     = true
+}
+
+variable "policy_log_scrubbing_enabled" {
+  description = "Whether the log scrubbing is enabled or disabled. Defaults to `true`."
+  type        = bool
+  default     = true
+}
+
+variable "policy_log_scrubbing_rules" {
+  description = <<EOD
+Log scrubbing rules configuration object with following attributes:
+```
+- enabled:                   Whether this rule is enabled. Defaults to `true`.
+- match_variable:            Specifies the variable to be scrubbed from the logs. Possible values are `RequestHeaderNames`, `RequestCookieNames`, `RequestArgNames`, `RequestPostArgNames`, `RequestJSONArgNames` and `RequestIPAddress`.
+- selector_match_operator:   Specifies the operating on the selector. Possible values are `Equals` and `EqualsAny`. Defaults to `Equals`.
+- selector:                  Specifies which elements in the collection this rule applies to.
+```
+EOD
+  type = list(object({
+    enabled                 = optional(bool, true)
+    match_variable          = string
+    selector_match_operator = optional(string, "Equals")
+    selector                = optional(string)
+  }))
+  default = []
+}
+
 variable "custom_rules_configuration" {
   description = <<EOD
 Custom rules configuration object with following attributes:
 ```
+- enabled:                        Describes if the policy is in enabled state or disabled state. Defaults to `true`.
 - name:                           Gets name of the resource that is unique within a policy. This name can be used to access the resource.
 - priority:                       Describes priority of the rule. Rules with a lower value will be evaluated before rules with a higher value.
-- rule_type:                      Describes the type of rule. Possible values are `MatchRule` and `Invalid`.
-- action:                         Type of action. Possible values are `Allow`, `Block` and `Log`.
+- rule_type:                      Describes the type of rule. Possible values are `MatchRule`, `RateLimitRule` and `Invalid`.
+- action:                         Type of action. Possible values are `Allow`, `Block`, `JSChallenge` and `Log`.
+- rate_limit_duration:            Specifies the duration at which the rate limit policy will be applied. Should be used with `RateLimitRule` rule type. Possible values are `FiveMins` and `OneMin`.
+- rate_limit_threshold:           Specifies the threshold value for the rate limit policy. Must be greater than or equal to 1 if provided.
+- group_rate_limit_by:            Specifies what grouping the rate limit will count requests by. Possible values are `GeoLocation`, `ClientAddr` and `None`.
 - match_conditions_configuration: One or more `match_conditions` blocks as defined below.
 - match_variable_configuration:   One or more match_variables blocks as defined below.
 - variable_name:                  The name of the Match Variable. Possible values are RemoteAddr, RequestMethod, QueryString, PostArgs, RequestUri, RequestHeaders, RequestBody and RequestCookies.
 - selector:                       Describes field of the matchVariable collection
 - match_values:                   A list of match values.
-- operator:                       Describes operator to be matched. Possible values are IPMatch, GeoMatch, Equal, Contains, LessThan, GreaterThan, LessThanOrEqual, GreaterThanOrEqual, BeginsWith, EndsWith and Regex.
+- operator:                       Describes operator to be matched. Possible values are `Any`, `IPMatch`, `GeoMatch`, `Equal`, `Contains`, `LessThan`, `GreaterThan`, `LessThanOrEqual`, `GreaterThanOrEqual`, `BeginsWith`, `EndsWith` and `Regex`.
 - negation_condition:             Describes if this is negate condition or not
-- transforms:                     A list of transformations to do before the match is attempted. Possible values are HtmlEntityDecode, Lowercase, RemoveNulls, Trim, UrlDecode and UrlEncode.
+- transforms:                     A list of transformations to do before the match is attempted. Possible values are `HtmlEntityDecode`, `Lowercase`, `RemoveNulls`, `Trim`, `Uppercase`, `UrlDecode` and `UrlEncode`.
 ```
 EOD
   type = list(object({
-    name      = optional(string)
-    priority  = optional(number)
-    rule_type = optional(string)
-    action    = optional(string)
+    enabled              = optional(bool, true)
+    name                 = optional(string)
+    priority             = optional(number)
+    rule_type            = optional(string)
+    action               = optional(string)
+    rate_limit_duration  = optional(string)
+    rate_limit_threshold = optional(number)
+    group_rate_limit_by  = optional(string)
     match_conditions_configuration = optional(list(object({
       match_variable_configuration = optional(list(object({
         variable_name = optional(string)

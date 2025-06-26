@@ -4,11 +4,34 @@ resource "azurerm_web_application_firewall_policy" "main" {
   resource_group_name = var.resource_group_name
 
   policy_settings {
-    enabled                     = var.policy_enabled
-    mode                        = var.policy_mode
-    file_upload_limit_in_mb     = var.policy_file_limit
-    request_body_check          = var.policy_request_body_check_enabled
-    max_request_body_size_in_kb = var.policy_max_body_size
+    enabled                                   = var.policy_enabled
+    mode                                      = var.policy_mode
+    file_upload_limit_in_mb                   = var.policy_file_limit
+    request_body_check                        = var.policy_request_body_check_enabled
+    max_request_body_size_in_kb               = var.policy_max_body_size
+    request_body_enforcement                  = var.policy_request_body_enforcement
+    request_body_inspect_limit_in_kb          = var.policy_request_body_inspect_limit
+    js_challenge_cookie_expiration_in_minutes = var.policy_js_challenge_cookie_expiration
+    file_upload_enforcement                   = var.policy_file_upload_enforcement
+
+    dynamic "log_scrubbing" {
+      for_each = var.policy_log_scrubbing_enabled ? [1] : []
+
+      content {
+        enabled = var.policy_log_scrubbing_enabled
+
+        dynamic "rule" {
+          for_each = var.policy_log_scrubbing_rules
+
+          content {
+            enabled                 = rule.value.enabled
+            match_variable          = rule.value.match_variable
+            selector_match_operator = rule.value.selector_match_operator
+            selector                = rule.value.selector
+          }
+        }
+      }
+    }
   }
 
   managed_rules {
@@ -70,10 +93,15 @@ resource "azurerm_web_application_firewall_policy" "main" {
     for_each = var.custom_rules_configuration
 
     content {
-      name      = custom_rules.value.name
-      priority  = custom_rules.value.priority
-      rule_type = custom_rules.value.rule_type
-      action    = custom_rules.value.action
+      enabled              = custom_rules.value.enabled
+      name                 = custom_rules.value.name
+      priority             = custom_rules.value.priority
+      rule_type            = custom_rules.value.rule_type
+      action               = custom_rules.value.action
+      rate_limit_duration  = custom_rules.value.rate_limit_duration
+      rate_limit_threshold = custom_rules.value.rate_limit_threshold
+      group_rate_limit_by  = custom_rules.value.group_rate_limit_by
+
       dynamic "match_conditions" {
         for_each = custom_rules.value.match_conditions_configuration
 
