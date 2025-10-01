@@ -1,3 +1,23 @@
+## 8.1.1 (2025-10-01)
+
+### Code Refactoring
+
+* **deps:** 🔗 update claranet/azurecaf to ~> 1.3.0 🔧 7abf046
+
+### Miscellaneous Chores
+
+* 🗑️ remove old commitlint configuration files 89e796f
+* **deps:** update dependency opentofu to v1.10.3 6a7b3b3
+* **deps:** update dependency opentofu to v1.10.6 d81b66a
+* **deps:** update dependency tflint to v0.58.1 caaa406
+* **deps:** update dependency tflint to v0.59.1 371ac46
+* **deps:** update dependency trivy to v0.66.0 5e508d8
+* **deps:** update dependency trivy to v0.67.0 f8bbff8
+* **deps:** update pre-commit hook pre-commit/pre-commit-hooks to v6 1020c98
+* **deps:** update tools 540f8ef
+* **deps:** update tools a62ef3a
+* **deps:** update tools 13507e3
+
 ## 8.1.0 (2025-06-27)
 
 ### Features
