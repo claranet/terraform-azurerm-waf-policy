@@ -111,7 +111,7 @@ module "waf_policy" {
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | azurecaf | >= 1.2.28 |
 | azurerm | ~> 4.0 |
 
@@ -122,14 +122,14 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [azurerm_web_application_firewall_policy.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/web_application_firewall_policy) | resource |
 | [azurecaf_name.wafp](https://registry.terraform.io/providers/claranet/azurecaf/latest/docs/data-sources/name) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | client\_name | Client name/account used in naming. | `string` | n/a | yes |
 | custom\_name | WAF Policy custom name. | `string` | `null` | no |
 | custom\_rules\_configuration | Custom rules configuration object with following attributes:<pre>- enabled:                        Describes if the policy is in enabled state or disabled state. Defaults to `true`.<br/>- name:                           Gets name of the resource that is unique within a policy. This name can be used to access the resource.<br/>- priority:                       Describes priority of the rule. Rules with a lower value will be evaluated before rules with a higher value.<br/>- rule_type:                      Describes the type of rule. Possible values are `MatchRule`, `RateLimitRule` and `Invalid`.<br/>- action:                         Type of action. Possible values are `Allow`, `Block`, `JSChallenge` and `Log`.<br/>- rate_limit_duration:            Specifies the duration at which the rate limit policy will be applied. Should be used with `RateLimitRule` rule type. Possible values are `FiveMins` and `OneMin`.<br/>- rate_limit_threshold:           Specifies the threshold value for the rate limit policy. Must be greater than or equal to 1 if provided.<br/>- group_rate_limit_by:            Specifies what grouping the rate limit will count requests by. Possible values are `GeoLocation`, `ClientAddr` and `None`.<br/>- match_conditions_configuration: One or more `match_conditions` blocks as defined below.<br/>- match_variable_configuration:   One or more match_variables blocks as defined below.<br/>- variable_name:                  The name of the Match Variable. Possible values are RemoteAddr, RequestMethod, QueryString, PostArgs, RequestUri, RequestHeaders, RequestBody and RequestCookies.<br/>- selector:                       Describes field of the matchVariable collection<br/>- match_values:                   A list of match values.<br/>- operator:                       Describes operator to be matched. Possible values are `Any`, `IPMatch`, `GeoMatch`, `Equal`, `Contains`, `LessThan`, `GreaterThan`, `LessThanOrEqual`, `GreaterThanOrEqual`, `BeginsWith`, `EndsWith` and `Regex`.<br/>- negation_condition:             Describes if this is negate condition or not<br/>- transforms:                     A list of transformations to do before the match is attempted. Possible values are `HtmlEntityDecode`, `Lowercase`, `RemoveNulls`, `Trim`, `Uppercase`, `UrlDecode` and `UrlEncode`.</pre> | <pre>list(object({<br/>    enabled              = optional(bool, true)<br/>    name                 = optional(string)<br/>    priority             = optional(number)<br/>    rule_type            = optional(string)<br/>    action               = optional(string)<br/>    rate_limit_duration  = optional(string)<br/>    rate_limit_threshold = optional(number)<br/>    group_rate_limit_by  = optional(string)<br/>    match_conditions_configuration = optional(list(object({<br/>      match_variable_configuration = optional(list(object({<br/>        variable_name = optional(string)<br/>        selector      = optional(string, null)<br/>      })))<br/>      match_values       = optional(list(string))<br/>      operator           = optional(string)<br/>      negation_condition = optional(string, null)<br/>      transforms         = optional(list(string), null)<br/>    })))<br/>  }))</pre> | `[]` | no |
@@ -159,7 +159,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | http\_listener\_ids | A list of HTTP Listener IDs from an azurerm\_application\_gateway. |
 | id | WAF Policy ID. |
 | name | WAF Policy name. |
