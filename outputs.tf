@@ -11,6 +11,7 @@ output "name" {
 output "resource" {
   description = "WAF Policy resource object."
   value       = azurerm_web_application_firewall_policy.main
+  sensitive   = true
 }
 
 output "http_listener_ids" {
